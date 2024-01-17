@@ -20,24 +20,36 @@ public class InstagramController {
     }
 
     @PostMapping
-    public ResponseEntity<InstagramDto> createUser(@RequestBody InstagramDto instagramDto){
+    public ResponseEntity<InstagramDto> createUser(@RequestBody InstagramDto instagramDto) {
         InstagramDto users = instagramService.createUser(instagramDto);
         return new ResponseEntity<>(users, HttpStatus.CREATED);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?>deleteUserById(@PathVariable long id){
+    public ResponseEntity<?> deleteUserById(@PathVariable long id) {
         instagramService.deleteUserById(id);
-        return new ResponseEntity<>("Record is deleted",HttpStatus.OK);
+        return new ResponseEntity<>("Record is deleted", HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity<List<Instagram>> getAllUsers() {
+//        List<Instagram> allUsers = instagramService.getAllUsers();
+//        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+//    }
     @GetMapping
-    public ResponseEntity<List<Instagram>> getAllUsers(){
-        List<Instagram> allUsers = instagramService.getAllUsers();
-        return new ResponseEntity<>(allUsers,HttpStatus.OK);
+    public List<InstagramDto> getAllUsers(){
+        List<InstagramDto> dtos=instagramService.getAllUsers();
+        return dtos;
     }
-@PutMapping
-public ResponseEntity<InstagramDto> updateUsersById(@RequestParam long id, @RequestBody InstagramDto dto) {
-    InstagramDto instagramDto = instagramService.updateUsersById(id, dto);
-    return new ResponseEntity<>(instagramDto, HttpStatus.OK);
-}
+    @GetMapping("/{id}")
+    public ResponseEntity<InstagramDto> getUsersById(@PathVariable long id){
+        InstagramDto dto = instagramService.getUsersById(id);
+        return new ResponseEntity<>(dto,HttpStatus.OK);
+    }
+    @PutMapping
+    public ResponseEntity<InstagramDto> updateUsersById(@RequestParam long id, @RequestBody InstagramDto dto) {
+        InstagramDto instagramDto = instagramService.updateUsersById(id, dto);
+        return new ResponseEntity<>(instagramDto, HttpStatus.OK);
+    }
 
 }

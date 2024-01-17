@@ -8,6 +8,10 @@ import java.util.List;
 public interface InstagramService {
     InstagramDto createUser(InstagramDto instagramDto );
     void deleteUserById (long id );
-    List<Instagram> getAllUsers();
+   // List<Instagram> getAllUsers();
     InstagramDto updateUsersById(long id, InstagramDto dto);
+
+    InstagramDto getUsersById(long id);
+
+    List<InstagramDto> getAllUsers();
 }
