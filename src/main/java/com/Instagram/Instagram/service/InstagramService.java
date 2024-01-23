@@ -1,6 +1,5 @@
 package com.Instagram.Instagram.service;
 
-import com.Instagram.Instagram.entity.Instagram;
 import com.Instagram.Instagram.payload.InstagramDto;
 
 import java.util.List;
@@ -13,5 +12,5 @@ public interface InstagramService {
 
     InstagramDto getUsersById(long id);
 
-    List<InstagramDto> getAllUsers();
+    List<InstagramDto> getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir);
 }

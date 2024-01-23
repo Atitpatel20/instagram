@@ -36,9 +36,15 @@ public class InstagramController {
 //        List<Instagram> allUsers = instagramService.getAllUsers();
 //        return new ResponseEntity<>(allUsers, HttpStatus.OK);
 //    }
+    // http://localhost:8080/api/igUsers?pageNo=0&pageSize=3&sortBy=name&sortDir=desc
     @GetMapping
-    public List<InstagramDto> getAllUsers(){
-        List<InstagramDto> dtos=instagramService.getAllUsers();
+    public List<InstagramDto> getAllUsers(
+            @RequestParam(name="pageNo",required=false,defaultValue = "0")int pageNo,
+            @RequestParam(name="pageSize",required=false,defaultValue = "3")int pageSize,
+            @RequestParam(name="sortBy",required=false,defaultValue = "id")String sortBy,
+            @RequestParam(name="sortDir",required=false,defaultValue = "desc")String sortDir
+    ){
+        List<InstagramDto> dtos=instagramService.getAllUsers(pageNo,pageSize,sortBy,sortDir);
         return dtos;
     }
     @GetMapping("/{id}")

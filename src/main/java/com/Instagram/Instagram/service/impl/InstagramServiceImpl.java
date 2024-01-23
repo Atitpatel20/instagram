@@ -5,6 +5,10 @@ import com.Instagram.Instagram.exception.ResourceNotFoundException;
 import com.Instagram.Instagram.payload.InstagramDto;
 import com.Instagram.Instagram.repository.InstagramRepository;
 import com.Instagram.Instagram.service.InstagramService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,8 +69,11 @@ public class InstagramServiceImpl implements InstagramService {
     }
 
     @Override
-    public List<InstagramDto> getAllUsers() {
-        List<Instagram> users = instagramRepository.findAll();
+    public List<InstagramDto> getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable=PageRequest.of(pageNo,pageSize,sort);
+        Page<Instagram> pageUsers = instagramRepository.findAll(pageable);
+        List<Instagram> users = pageUsers.getContent();
         List<InstagramDto> dtos = users.stream().map(i -> mapToDto(i)).collect(Collectors.toList());
         return dtos;
     }
