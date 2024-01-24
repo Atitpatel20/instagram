@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
-@Table(name="test")
+@Table(name = "test")
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Instagram {
 
     @Id
@@ -18,10 +19,12 @@ public class Instagram {
     private long id;
 
     private String name;
-    @Column(name="email",unique = true)
+    @Column(name = "email", unique = true)
     private String email;
     private String message;
-    @Column(name="mobile",unique = true)
+    @Column(name = "mobile", unique = true)
     private long mobile;
 
+    @OneToMany(mappedBy = "instagram", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }
