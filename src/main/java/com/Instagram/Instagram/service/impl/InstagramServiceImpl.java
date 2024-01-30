@@ -5,6 +5,7 @@ import com.Instagram.Instagram.exception.ResourceNotFoundException;
 import com.Instagram.Instagram.payload.InstagramDto;
 import com.Instagram.Instagram.repository.InstagramRepository;
 import com.Instagram.Instagram.service.InstagramService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +19,11 @@ import java.util.stream.Collectors;
 public class InstagramServiceImpl implements InstagramService {
 
     InstagramRepository instagramRepository;
+    private ModelMapper modelMapper;
 
-    public InstagramServiceImpl(InstagramRepository instagramRepository) {
+    public InstagramServiceImpl(InstagramRepository instagramRepository, ModelMapper modelMapper) {
         this.instagramRepository = instagramRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -48,15 +51,15 @@ public class InstagramServiceImpl implements InstagramService {
         Instagram instagram = instagramRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("User not found with this id: "+id)
         );
-        instagram.setName(dto.getName());
-        instagram.setEmail(dto.getEmail());
-        instagram.setMessage(dto.getMessage());
-        instagram.setMobile(dto.getMobile());
+        Instagram i = mapToEntity(dto);
+        i.setId(instagram.getId());
+//        instagram.setName(dto.getName());
+//        instagram.setEmail(dto.getEmail());
+//        instagram.setMessage(dto.getMessage());
+//        instagram.setMobile(dto.getMobile());
 
-        Instagram updateUsers = instagramRepository.save(instagram);
-
-        InstagramDto instaDto = mapToDto(updateUsers);
-        return instaDto;
+        Instagram updateUsers = instagramRepository.save(i);
+        return mapToDto(updateUsers);
     }
 
     @Override
@@ -64,8 +67,7 @@ public class InstagramServiceImpl implements InstagramService {
         Instagram instagram = instagramRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("user not found with this id:" + id)
         );
-        InstagramDto dto= mapToDto(instagram);
-        return dto;
+        return mapToDto(instagram);
     }
 
     @Override
@@ -78,21 +80,23 @@ public class InstagramServiceImpl implements InstagramService {
         return dtos;
     }
     InstagramDto mapToDto(Instagram instagram){
-        InstagramDto dto = new InstagramDto();
-        dto.setId(instagram.getId());
-        dto.setName(instagram.getName());
-        dto.setEmail(instagram.getEmail());
-        dto.setMobile(instagram.getMobile());
-        dto.setMessage(instagram.getMessage());
+        InstagramDto dto = modelMapper.map(instagram, InstagramDto.class);
+//        InstagramDto dto = new InstagramDto();
+//        dto.setId(instagram.getId());
+//        dto.setName(instagram.getName());
+//        dto.setEmail(instagram.getEmail());
+//        dto.setMobile(instagram.getMobile());
+//        dto.setMessage(instagram.getMessage());
         return dto;
     }
    Instagram mapToEntity(InstagramDto instagramDto){
-       Instagram instagram= new Instagram();
-       instagram.setId(instagramDto.getId());
-       instagram.setName(instagramDto.getName());
-       instagram.setEmail(instagramDto.getEmail());
-       instagram.setMobile(instagramDto.getMobile());
-       instagram.setMessage(instagramDto.getMessage());
+       Instagram instagram = modelMapper.map(instagramDto, Instagram.class);
+//       Instagram instagram= new Instagram();
+//       instagram.setId(instagramDto.getId());
+//       instagram.setName(instagramDto.getName());
+//       instagram.setEmail(instagramDto.getEmail());
+//       instagram.setMobile(instagramDto.getMobile());
+//       instagram.setMessage(instagramDto.getMessage());
         return instagram;
     }
     
