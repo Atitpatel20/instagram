@@ -1,7 +1,9 @@
 package com.Instagram.Instagram.controller;
 
+import com.Instagram.Instagram.entity.Role;
 import com.Instagram.Instagram.entity.User;
 import com.Instagram.Instagram.payload.SignUpDto;
+import com.Instagram.Instagram.repository.RoleRepository;
 import com.Instagram.Instagram.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -19,6 +24,9 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @PostMapping("/signUp")
     public ResponseEntity<?> createRegistration(@RequestBody SignUpDto signUpDto) {
@@ -35,6 +43,10 @@ public class AuthController {
         user.setUsername(signUpDto.getUsername());
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        Role roles = roleRepository.findByName(signUpDto.getRoleType()).get();
+        Set<Role> convertToSet = new HashSet<>();
+        convertToSet.add(roles);
+        user.setRoles(convertToSet);
         userRepository.save(user);
         return new ResponseEntity<>("Registration done successfully", HttpStatus.CREATED);
     }
